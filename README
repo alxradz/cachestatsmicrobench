@@ -1,2 +1,20 @@
-This file was created by IntelliJ IDEA 12.0 for binding GitHub repository
-This file was modified by IntelliJ IDEA 12.0 for binding GitHub repository
+Simple micro benchmark to validate if Striped64 is worth using in Guava caches due ot its use of sun.misc.Unsafe methods.
+
+The results speak for themselves :)
+
+Striped64Bench A - Threads=1 - Duration=0.5510s
+AtomicBench A - Threads=1 - Duration=0.5350s
+Striped64Bench B - Threads=1 - Duration=0.4810s
+AtomicBench B - Threads=1 - Duration=0.5210s
+Striped64Bench A - Threads=2 - Duration=0.8430s
+AtomicBench A - Threads=2 - Duration=2.0370s
+Striped64Bench B - Threads=2 - Duration=0.6550s
+AtomicBench B - Threads=2 - Duration=3.1630s
+Striped64Bench A - Threads=4 - Duration=1.0020s
+AtomicBench A - Threads=4 - Duration=5.9140s
+Striped64Bench B - Threads=4 - Duration=0.8280s
+AtomicBench B - Threads=4 - Duration=5.9760s
+Striped64Bench A - Threads=8 - Duration=1.1620s
+AtomicBench A - Threads=8 - Duration=14.3500s
+Striped64Bench B - Threads=8 - Duration=1.1430s
+AtomicBench B - Threads=8 - Duration=15.3570s
