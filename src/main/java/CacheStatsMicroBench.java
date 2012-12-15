@@ -1,6 +1,4 @@
-import com.google.common.cache.AtomicStatsCounter;
-import com.google.common.cache.StatsCounter;
-import com.google.common.cache.Striped64StatsCounter;
+import com.google.common.cache.*;
 
 import java.util.Random;
 import java.util.concurrent.CountDownLatch;
@@ -18,10 +16,12 @@ public class CacheStatsMicroBench {
             samples[i] = rnd.nextInt(2048);
         }
 
-        int[] threads = {1, 2, 4, 8};
+        int[] threads = {1, 2, 4, 8, 16};
         for (int j = 0; j < threads.length; j++) {
             final int thread = threads[j];
             final ExecutorService exec = Executors.newFixedThreadPool(thread);
+
+            System.out.format("Threads=%d", thread).println();
 
             CountDownLatch latch;
             long start;
@@ -30,13 +30,25 @@ public class CacheStatsMicroBench {
 
             latch = new CountDownLatch(thread);
             start = System.currentTimeMillis();
+            ControlStatsCounter control = new ControlStatsCounter();
+            for (int i = 0; i < thread; i++) {
+                exec.execute(new BenchRunner(latch, control));
+            }
+            latch.await();
+            end = System.currentTimeMillis();
+            System.out.format("  Control            Duration=%.4fs", (end - start) / 1000.0).println();
+
+
+            latch = new CountDownLatch(thread);
+            start = System.currentTimeMillis();
             subject = new Striped64StatsCounter();
             for (int i = 0; i < thread; i++) {
                 exec.execute(new BenchRunner(latch, subject));
             }
             latch.await();
             end = System.currentTimeMillis();
-            System.out.format("Striped64Bench A - Threads=%d - Duration=%.4fs", thread, (end - start) / 1000.0).println();
+            System.out.format("  Striped64          Duration=%.4fs", (end - start) / 1000.0).println();
+            control.verify(subject);
 
 
             latch = new CountDownLatch(thread);
@@ -47,7 +59,19 @@ public class CacheStatsMicroBench {
             }
             latch.await();
             end = System.currentTimeMillis();
-            System.out.format("AtomicBench A - Threads=%d - Duration=%.4fs", thread, (end - start) / 1000.0).println();
+            System.out.format("  Atomic             Duration=%.4fs", (end - start) / 1000.0).println();
+            control.verify(subject);
+
+            latch = new CountDownLatch(thread);
+            start = System.currentTimeMillis();
+            subject = new HomeBrewStatsCounter();
+            for (int i = 0; i < thread; i++) {
+                exec.execute(new BenchRunner(latch, subject));
+            }
+            latch.await();
+            end = System.currentTimeMillis();
+            System.out.format("  LocalStripedLong   Duration=%.4fs", (end - start) / 1000.0).println();
+            control.verify(subject);
 
             latch = new CountDownLatch(thread);
             start = System.currentTimeMillis();
@@ -57,7 +81,8 @@ public class CacheStatsMicroBench {
             }
             latch.await();
             end = System.currentTimeMillis();
-            System.out.format("Striped64Bench B - Threads=%d - Duration=%.4fs", thread, (end - start) / 1000.0).println();
+            System.out.format("  Striped64          Duration=%.4fs", (end - start) / 1000.0).println();
+            control.verify(subject);
 
             latch = new CountDownLatch(thread);
             start = System.currentTimeMillis();
@@ -67,10 +92,22 @@ public class CacheStatsMicroBench {
             }
             latch.await();
             end = System.currentTimeMillis();
-            System.out.format("AtomicBench B - Threads=%d - Duration=%.4fs", thread, (end - start) / 1000.0).println();
+            System.out.format("  Atomic             Duration=%.4fs", (end - start) / 1000.0).println();
+            control.verify(subject);
+
+            latch = new CountDownLatch(thread);
+            start = System.currentTimeMillis();
+            subject = new HomeBrewStatsCounter();
+            for (int i = 0; i < thread; i++) {
+                exec.execute(new BenchRunner(latch, subject));
+            }
+            latch.await();
+            end = System.currentTimeMillis();
+            System.out.format("  LocalStripedLong   Duration=%.4fs", (end - start) / 1000.0).println();
+            control.verify(subject);
 
             exec.shutdown();
-            exec.awaitTermination(1, TimeUnit.DAYS);
+            exec.awaitTermination(1, TimeUnit.HOURS);
         }
 
     }
@@ -115,6 +152,8 @@ public class CacheStatsMicroBench {
                 for (int i = 0; i < 100; i++) {
                     subject.recordEviction();
                 }
+
+                subject.snapshot();
             }
 
             latch.countDown();
