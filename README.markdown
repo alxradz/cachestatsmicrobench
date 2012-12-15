@@ -45,58 +45,57 @@ I have released the LocalStripedLong implementation under the Apache License. Fe
 Results
 -------
 
-
-Threads=1
-* Control            Duration=1.0300s
-
-* Striped64          Duration=0.5360s
-* Atomic             Duration=0.5430s
-* LocalStripedLong   Duration=0.3540s
-
-* Striped64          Duration=0.5700s
-* Atomic             Duration=0.5460s
-* LocalStripedLong   Duration=0.4580s
-
-Threads=2
-* Control            Duration=4.2770s
-
-* Striped64          Duration=1.0590s
-* Atomic             Duration=2.3530s
-* LocalStripedLong   Duration=0.5050s
-
-* Striped64          Duration=0.8890s
-* Atomic             Duration=2.6070s
-* LocalStripedLong   Duration=0.4750s
-
-Threads=4
-* Control            Duration=9.3190s
-
-* Striped64          Duration=1.2160s
-* Atomic             Duration=4.7460s
-* LocalStripedLong   Duration=0.6380s
-
-* Striped64          Duration=1.0620s
-* Atomic             Duration=5.9650s
-* LocalStripedLong   Duration=0.6860s
-
-Threads=8
-* Control            Duration=18.6170s
-
-* Striped64          Duration=1.6710s
-* Atomic             Duration=14.3180s
-* LocalStripedLong   Duration=0.9750s
-
-* Striped64          Duration=1.5600s
-* Atomic             Duration=13.0770s
-* LocalStripedLong   Duration=1.4170s
-
-Threads=16
-* Control            Duration=37.4160s
-
-* Striped64          Duration=3.4380s
-* Atomic             Duration=25.9820s
-* LocalStripedLong   Duration=2.5620s
-
-* Striped64          Duration=3.2070s
-* Atomic             Duration=26.4030s
-* LocalStripedLong   Duration=2.5460s
+>Threads=1
+>  Control            Duration=1.0300s
+>
+>  Striped64          Duration=0.5360s
+>  Atomic             Duration=0.5430s
+>  LocalStripedLong   Duration=0.3540s
+>
+>  Striped64          Duration=0.5700s
+>  Atomic             Duration=0.5460s
+>  LocalStripedLong   Duration=0.4580s
+>
+>Threads=2
+>  Control            Duration=4.2770s
+>
+>  Striped64          Duration=1.0590s
+>  Atomic             Duration=2.3530s
+>  LocalStripedLong   Duration=0.5050s
+>
+>  Striped64          Duration=0.8890s
+>  Atomic             Duration=2.6070s
+>  LocalStripedLong   Duration=0.4750s
+>
+>Threads=4
+>  Control            Duration=9.3190s
+>
+>  Striped64          Duration=1.2160s
+>  Atomic             Duration=4.7460s
+>  LocalStripedLong   Duration=0.6380s
+>
+>  Striped64          Duration=1.0620s
+>  Atomic             Duration=5.9650s
+>  LocalStripedLong   Duration=0.6860s
+>
+>Threads=8
+>  Control            Duration=18.6170s
+>
+>  Striped64          Duration=1.6710s
+>  Atomic             Duration=14.3180s
+>  LocalStripedLong   Duration=0.9750s
+>
+>  Striped64          Duration=1.5600s
+>  Atomic             Duration=13.0770s
+>  LocalStripedLong   Duration=1.4170s
+>
+>Threads=16
+>  Control            Duration=37.4160s
+>
+>  Striped64          Duration=3.4380s
+>  Atomic             Duration=25.9820s
+>  LocalStripedLong   Duration=2.5620s
+>
+>  Striped64          Duration=3.2070s
+>  Atomic             Duration=26.4030s
+>  LocalStripedLong   Duration=2.5460s
