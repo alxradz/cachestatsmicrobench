@@ -40,7 +40,7 @@ Conclusion
 To my surprise my LocalStripedLong implemetation was actually the winner by a reasonable margin. Closely followed by the Striped64 implementation. The atomic implementation performed worse than expected, and you can see contention kills it's
 performance as the threads are increased.
 
-I have released the LocalStripedLong implementation under the Apache License. Feel free to use it wherever. You also be happy to find it a home in a library somewhere.
+I have released the LocalStripedLong implementation under the Apache License. Feel free to use it wherever. Would also be happy to find it a home in a library somewhere.
 
 Results
 -------
