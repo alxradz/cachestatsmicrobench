@@ -6,8 +6,7 @@ Available here: https://github.com/al3ks/cachestatsmicrobench
 Aim
 ---
 
-Purpose of this experiment is to determine the most efficient means of implementing a high performance counter that
-can be used in heavily multithreaded applications.
+Purpose of this experiment is to determine the most efficient means of implementing a high performance counter that can be used in heavily multithreaded applications.
 
 The subjects in this experiment are:
     * Control - A simple counter that uses a primitive long and synchronized methods.
@@ -33,18 +32,15 @@ Test
 
 Implemented here: https://github.com/al3ks/cachestatsmicrobench/blob/master/src/main/java/CacheStatsMicroBench.java
 
-Other than the Control, the tests are run twice just to shake off any temporal artifacts. You can assume the "real" number
-is between the two values.
+Other than the Control, the tests are run twice just to shake off any temporal artifacts. You can assume the "real" number is between the two values.
 
 Conclusion
 ----------
 
-To my surprise my LocalStripedLong implemetation was actually the winner by a reasonable margin. Closely followed by the
-Striped64 implementation. The atomic implementation performed worse than expected, and you can see contention kills it's
+To my surprise my LocalStripedLong implemetation was actually the winner by a reasonable margin. Closely followed by the Striped64 implementation. The atomic implementation performed worse than expected, and you can see contention kills it's
 performance as the threads are increased.
 
-I have released the LocalStripedLong implementation under the Apache License. Feel free to use it wherever. You also
-be happy to find it a home in a library somewhere.
+I have released the LocalStripedLong implementation under the Apache License. Feel free to use it wherever. You also be happy to find it a home in a library somewhere.
 
 Results
 -------
