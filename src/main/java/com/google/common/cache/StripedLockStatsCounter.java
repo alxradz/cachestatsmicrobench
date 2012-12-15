@@ -1,34 +1,25 @@
 package com.google.common.cache;
 
-import com.hyperscalelogic.util.concurrent.LocalStripedLongAdder;
+import com.hyperscalelogic.util.concurrent.StripedLockLongAdder;
 
-public final class HomeBrewStatsCounter implements StatsCounter {
+public final class StripedLockStatsCounter implements StatsCounter {
 
 
-    private final LocalStripedLongAdder hitCount = new LocalStripedLongAdder();
-    private final LocalStripedLongAdder missCount = new LocalStripedLongAdder();
-    private final LocalStripedLongAdder loadSuccessCount = new LocalStripedLongAdder();
-    private final LocalStripedLongAdder loadExceptionCount = new LocalStripedLongAdder();
-    private final LocalStripedLongAdder totalLoadTime = new LocalStripedLongAdder();
-    private final LocalStripedLongAdder evictionCount = new LocalStripedLongAdder();
+    private final StripedLockLongAdder hitCount = new StripedLockLongAdder();
+    private final StripedLockLongAdder missCount = new StripedLockLongAdder();
+    private final StripedLockLongAdder loadSuccessCount = new StripedLockLongAdder();
+    private final StripedLockLongAdder loadExceptionCount = new StripedLockLongAdder();
+    private final StripedLockLongAdder totalLoadTime = new StripedLockLongAdder();
+    private final StripedLockLongAdder evictionCount = new StripedLockLongAdder();
 
-    /**
-     * Constructs an instance with all counts initialized to zero.
-     */
-    public HomeBrewStatsCounter() {
+    public StripedLockStatsCounter() {
     }
 
-    /**
-     * @since 11.0
-     */
     @Override
     public void recordHits(int count) {
         hitCount.add(count);
     }
 
-    /**
-     * @since 11.0
-     */
     @Override
     public void recordMisses(int count) {
         missCount.add(count);
@@ -62,9 +53,6 @@ public final class HomeBrewStatsCounter implements StatsCounter {
                 evictionCount.sum());
     }
 
-    /**
-     * Increments all counters by the values in {@code other}.
-     */
     public void incrementBy(StatsCounter other) {
         CacheStats otherStats = other.snapshot();
         hitCount.add(otherStats.hitCount());

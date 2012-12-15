@@ -15,12 +15,10 @@
  */
 package com.hyperscalelogic.util.concurrent;
 
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * A high performance counter designed to be as non-intrusive as possible. It uses a thread-local
- * long reference to stripe counters across threads.
+ * A high performance counter designed to be as non-intrusive as possible. It uses striped locks to increase bandwidth.
  * <p/>
  * This work with inspired by trying to emulate the behaviour of the Striped64 class by Doug Lea, but without using
  * the sun.misc.Unsafe class as at the time it was causing issues on the Android platform. To my surprise it performed
@@ -28,31 +26,30 @@ import java.util.concurrent.CopyOnWriteArrayList;
  *
  * @author Alex Radeski
  */
-public final class LocalStripedLongAdder {
+public final class StripedLockLongAdder {
 
-    private final List<LongRef> adders = new CopyOnWriteArrayList<LongRef>();
+    private static final int SIZE = 64;
 
-    private final ThreadLocal<LongRef> adder = new ThreadLocal<LongRef>() {
-        protected LongRef initialValue() {
-            final LongRef la = new LongRef();
-            adders.add(la);
-            return la;
-        }
-    };
+    private volatile long[] adders = new long[SIZE];
+    private final Object[] locks = new Object[SIZE];
+
+    {
+        for (int i = 0; i < SIZE; i++) locks[i] = new Object();
+    }
 
     public final void add(long v) {
-        adder.get().value += v;
+        final long tid = Thread.currentThread().getId();
+        final int sid = (int) (tid ^ (tid >>> 32)) % SIZE;
+        synchronized (locks[sid]) {
+            adders[sid] += v;
+        }
     }
 
     public final long sum() {
         long sum = 0;
-        for (int i = 0; i < adders.size(); i++) {
-            sum += adders.get(i).value;
+        for (int i = 0; i < adders.length; i++) {
+            sum += adders[i];
         }
         return sum;
-    }
-
-    private static final class LongRef {
-        long value = 0;
     }
 }

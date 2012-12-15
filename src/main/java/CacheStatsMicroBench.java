@@ -23,93 +23,36 @@ public class CacheStatsMicroBench {
 
             System.out.format("Threads=%d", thread).println();
 
-            CountDownLatch latch;
-            long start;
-            long end;
-            StatsCounter subject;
-
-            latch = new CountDownLatch(thread);
-            start = System.currentTimeMillis();
             ControlStatsCounter control = new ControlStatsCounter();
-            for (int i = 0; i < thread; i++) {
-                exec.execute(new BenchRunner(latch, control));
-            }
-            latch.await();
-            end = System.currentTimeMillis();
-            System.out.format("  Control            Duration=%.4fs", (end - start) / 1000.0).println();
+            runTest("Control", thread, exec, control, control);
 
+            runTest("Atomic1", thread, exec, new AtomicStatsCounter(), control);
+            runTest("StripedAtomic1", thread, exec, new StripedAtomicStatsCounter(), control);
+            runTest("StripedLock1", thread, exec, new StripedLockStatsCounter(), control);
+            runTest("Striped641", thread, exec, new Striped64StatsCounter(), control);
+            runTest("StripedLocal1", thread, exec, new StripedLocalStatsCounter(), control);
 
-            latch = new CountDownLatch(thread);
-            start = System.currentTimeMillis();
-            subject = new Striped64StatsCounter();
-            for (int i = 0; i < thread; i++) {
-                exec.execute(new BenchRunner(latch, subject));
-            }
-            latch.await();
-            end = System.currentTimeMillis();
-            System.out.format("  Striped64          Duration=%.4fs", (end - start) / 1000.0).println();
-            control.verify(subject);
-
-
-            latch = new CountDownLatch(thread);
-            start = System.currentTimeMillis();
-            subject = new AtomicStatsCounter();
-            for (int i = 0; i < thread; i++) {
-                exec.execute(new BenchRunner(latch, subject));
-            }
-            latch.await();
-            end = System.currentTimeMillis();
-            System.out.format("  Atomic             Duration=%.4fs", (end - start) / 1000.0).println();
-            control.verify(subject);
-
-            latch = new CountDownLatch(thread);
-            start = System.currentTimeMillis();
-            subject = new HomeBrewStatsCounter();
-            for (int i = 0; i < thread; i++) {
-                exec.execute(new BenchRunner(latch, subject));
-            }
-            latch.await();
-            end = System.currentTimeMillis();
-            System.out.format("  LocalStripedLong   Duration=%.4fs", (end - start) / 1000.0).println();
-            control.verify(subject);
-
-            latch = new CountDownLatch(thread);
-            start = System.currentTimeMillis();
-            subject = new Striped64StatsCounter();
-            for (int i = 0; i < thread; i++) {
-                exec.execute(new BenchRunner(latch, subject));
-            }
-            latch.await();
-            end = System.currentTimeMillis();
-            System.out.format("  Striped64          Duration=%.4fs", (end - start) / 1000.0).println();
-            control.verify(subject);
-
-            latch = new CountDownLatch(thread);
-            start = System.currentTimeMillis();
-            subject = new AtomicStatsCounter();
-            for (int i = 0; i < thread; i++) {
-                exec.execute(new BenchRunner(latch, subject));
-            }
-            latch.await();
-            end = System.currentTimeMillis();
-            System.out.format("  Atomic             Duration=%.4fs", (end - start) / 1000.0).println();
-            control.verify(subject);
-
-            latch = new CountDownLatch(thread);
-            start = System.currentTimeMillis();
-            subject = new HomeBrewStatsCounter();
-            for (int i = 0; i < thread; i++) {
-                exec.execute(new BenchRunner(latch, subject));
-            }
-            latch.await();
-            end = System.currentTimeMillis();
-            System.out.format("  LocalStripedLong   Duration=%.4fs", (end - start) / 1000.0).println();
-            control.verify(subject);
+            runTest("Atomic2", thread, exec, new AtomicStatsCounter(), control);
+            runTest("StripedAtomic2", thread, exec, new StripedAtomicStatsCounter(), control);
+            runTest("StripedLock2", thread, exec, new StripedLockStatsCounter(), control);
+            runTest("Striped642", thread, exec, new Striped64StatsCounter(), control);
+            runTest("StripedLocal2", thread, exec, new StripedLocalStatsCounter(), control);
 
             exec.shutdown();
             exec.awaitTermination(1, TimeUnit.HOURS);
         }
+    }
 
+    private static void runTest(Object desc, int thread, ExecutorService exec, StatsCounter subject, ControlStatsCounter control) throws InterruptedException {
+        final CountDownLatch latch = new CountDownLatch(thread);
+        final long start = System.currentTimeMillis();
+        for (int i = 0; i < thread; i++) {
+            exec.execute(new BenchRunner(latch, subject));
+        }
+        latch.await();
+        final long end = System.currentTimeMillis();
+        System.out.format("  %-15s  Duration=%.4fs", desc, (end - start) / 1000.0).println();
+        control.verify(subject);
     }
 
     private static class BenchRunner implements Runnable {
