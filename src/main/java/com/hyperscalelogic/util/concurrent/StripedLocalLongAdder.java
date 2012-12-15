@@ -53,6 +53,6 @@ public final class StripedLocalLongAdder {
     }
 
     private static final class LongRef {
-        long value = 0;
+        volatile long value = 0;
     }
 }

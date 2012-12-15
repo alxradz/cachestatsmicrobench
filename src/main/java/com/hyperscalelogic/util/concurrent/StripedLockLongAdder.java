@@ -28,9 +28,9 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class StripedLockLongAdder {
 
-    private static final int SIZE = 64;
+    private static final int SIZE = 32;
 
-    private volatile long[] adders = new long[SIZE];
+    private final long[] adders = new long[SIZE];
     private final Object[] locks = new Object[SIZE];
 
     {
@@ -48,7 +48,11 @@ public final class StripedLockLongAdder {
     public final long sum() {
         long sum = 0;
         for (int i = 0; i < adders.length; i++) {
-            sum += adders[i];
+            long val = 0;
+            synchronized (locks[i]) {
+                val = adders[i];
+            }
+            sum += val;
         }
         return sum;
     }

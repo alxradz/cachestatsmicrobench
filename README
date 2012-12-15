@@ -39,88 +39,84 @@ Other than the Control, the tests are run twice just to shake off any temporal a
 Conclusion
 ----------
 
-To my surprise my StripedLocalLong implemetation was actually the winner by a reasonable margin. Closely followed by the Striped64 implementation. The atomic implementation performed worse than expected, and you can see contention kills it's
-performance as the threads are increased.
+Results are a mixed bag, the Striped64 implementation scale better as the thread count increased over actualy CPU core count and contention increases.
 
-I have released the StripedLocalLong implementation and variants under the Apache License. Feel free to use it wherever. Would also be happy to find it a home in a library somewhere.
-
-StripedLocalLong has very good performance up to 4 threads (there are 4 cores on my test machine), then performance starts to degrate with 8+ threads. The other striped implementations seems to come into their own as the thread count increases.
+StripedLocal offers a much simpler implementation with similar performance characteristics with much less code, and importantly no sun.misc.Unsafe() usage.
 
 Results
 -------
 
-
 Threads=1
-  Control          Duration=1.0260s
+  Control          Duration=1.0270s
 
   Atomic1          Duration=0.4990s
-  StripedAtomic1   Duration=1.3700s
-  StripedLock1     Duration=1.3740s
-  Striped641       Duration=0.5730s
-  StripedLocal1    Duration=0.3590s
+  StripedAtomic1   Duration=0.6320s
+  StripedLock1     Duration=1.6930s
+  Striped641       Duration=0.5760s
+  StripedLocal1    Duration=0.6140s
 
-  Atomic2          Duration=0.5230s
-  StripedAtomic2   Duration=0.5260s
-  StripedLock2     Duration=0.5240s
-  Striped642       Duration=0.5680s
-  StripedLocal2    Duration=0.4870s
+  Atomic2          Duration=0.5240s
+  StripedAtomic2   Duration=0.6190s
+  StripedLock2     Duration=0.5480s
+  Striped642       Duration=0.5670s
+  StripedLocal2    Duration=0.9030s
 
 Threads=2
-  Control          Duration=4.2630s
+  Control          Duration=3.9840s
 
-  Atomic1          Duration=2.4410s
-  StripedAtomic1   Duration=0.6420s
-  StripedLock1     Duration=0.5890s
-  Striped641       Duration=0.9050s
-  StripedLocal1    Duration=0.4920s
+  Atomic1          Duration=3.5070s
+  StripedAtomic1   Duration=0.8330s
+  StripedLock1     Duration=1.9890s
+  Striped641       Duration=0.9850s
+  StripedLocal1    Duration=0.9930s
 
-  Atomic2          Duration=2.4980s
-  StripedAtomic2   Duration=0.6170s
-  StripedLock2     Duration=0.7480s
-  Striped642       Duration=0.8580s
-  StripedLocal2    Duration=0.4650s
+  Atomic2          Duration=2.1370s
+  StripedAtomic2   Duration=1.5200s
+  StripedLock2     Duration=1.9810s
+  Striped642       Duration=0.8970s
+  StripedLocal2    Duration=1.5350s
 
 Threads=4
-  Control          Duration=9.1030s
+  Control          Duration=8.7310s
 
-  Atomic1          Duration=6.1930s
-  StripedAtomic1   Duration=1.0700s
-  StripedLock1     Duration=1.2100s
-  Striped641       Duration=1.1230s
-  StripedLocal1    Duration=0.6560s
+  Atomic1          Duration=6.1890s
+  StripedAtomic1   Duration=2.2150s
+  StripedLock1     Duration=3.1600s
+  Striped641       Duration=1.1830s
+  StripedLocal1    Duration=1.1060s
 
-  Atomic2          Duration=5.6960s
-  StripedAtomic2   Duration=1.1060s
-  StripedLock2     Duration=1.2010s
-  Striped642       Duration=1.2160s
-  StripedLocal2    Duration=0.6530s
+  Atomic2          Duration=5.5340s
+  StripedAtomic2   Duration=2.5090s
+  StripedLock2     Duration=3.0620s
+  Striped642       Duration=1.1620s
+  StripedLocal2    Duration=1.0870s
 
 Threads=8
-  Control          Duration=18.0370s
+  Control          Duration=18.6700s
 
-  Atomic1          Duration=14.8730s
-  StripedAtomic1   Duration=1.7750s
-  StripedLock1     Duration=1.8620s
-  Striped641       Duration=1.6390s
-  StripedLocal1    Duration=1.8080s
+  Atomic1          Duration=14.5450s
+  StripedAtomic1   Duration=3.7750s
+  StripedLock1     Duration=4.6210s
+  Striped641       Duration=1.6710s
+  StripedLocal1    Duration=2.9340s
 
-  Atomic2          Duration=13.0530s
-  StripedAtomic2   Duration=1.7410s
-  StripedLock2     Duration=1.8340s
-  Striped642       Duration=1.8050s
-  StripedLocal2    Duration=1.6430s
+  Atomic2          Duration=12.9900s
+  StripedAtomic2   Duration=3.6750s
+  StripedLock2     Duration=4.0460s
+  Striped642       Duration=1.6830s
+  StripedLocal2    Duration=3.1120s
 
 Threads=16
-  Control          Duration=36.4360s
+  Control          Duration=36.3160s
 
-  Atomic1          Duration=28.0890s
-  StripedAtomic1   Duration=3.2120s
-  StripedLock1     Duration=3.2030s
-  Striped641       Duration=3.4780s
-  StripedLocal1    Duration=3.2470s
+  Atomic1          Duration=28.2250s
+  StripedAtomic1   Duration=6.6630s
+  StripedLock1     Duration=8.5420s
+  Striped641       Duration=3.4110s
+  StripedLocal1    Duration=4.3410s
 
-  Atomic2          Duration=26.8560s
-  StripedAtomic2   Duration=3.1340s
-  StripedLock2     Duration=3.1530s
-  Striped642       Duration=3.3760s
-  StripedLocal2    Duration=3.7800s
+  Atomic2          Duration=26.8860s
+  StripedAtomic2   Duration=6.7430s
+  StripedLock2     Duration=8.7190s
+  Striped642       Duration=3.3340s
+  StripedLocal2    Duration=5.6160s

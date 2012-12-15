@@ -15,7 +15,7 @@
  */
 package com.hyperscalelogic.util.concurrent;
 
-import java.util.concurrent.atomic.AtomicLong;
+import java.util.concurrent.atomic.AtomicLongArray;
 
 /**
  * A high performance counter designed to be as non-intrusive as possible. It uses striped atomic longs to increase
@@ -31,25 +31,18 @@ public final class StripedAtomicLongAdder {
 
     private static final int SIZE = 64;
 
-    private volatile long[] adders = new long[SIZE];
-    private final Object[] locks = new Object[SIZE];
-
-    {
-        for (int i = 0; i < SIZE; i++) locks[i] = new Object();
-    }
+    private volatile AtomicLongArray adders = new AtomicLongArray(SIZE);
 
     public final void add(long v) {
         final long tid = Thread.currentThread().getId();
         final int sid = (int) (tid ^ (tid >>> 32)) % SIZE;
-        synchronized (locks[sid]) {
-            adders[sid] += v;
-        }
+        adders.addAndGet(sid, v);
     }
 
     public final long sum() {
         long sum = 0;
-        for (int i = 0; i < adders.length; i++) {
-            sum += adders[i];
+        for (int i = 0; i < SIZE; i++) {
+            sum += adders.get(i);
         }
         return sum;
     }
