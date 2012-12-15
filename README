@@ -1,0 +1,102 @@
+Guava Cache Stats Counter Micro Benchmark
+=========================================
+
+Available here: https://github.com/al3ks/cachestatsmicrobench
+
+Aim
+---
+
+Purpose of this experiment is to determine the most efficient means of implementing a high performance counter that can be used in heavily multithreaded applications.
+
+The subjects in this experiment are:
+    * Control - A simple counter that uses a primitive long and synchronized methods.
+    * Striped64 - A counter based on Doug Lea's Stripe64 class (and LongAdder wrapper class).
+    * Atomic - An implementation using atomic logs.
+    * LocalStripedLong - My own implementation inspired by Stripe64 with the aim of not using sun.misc.Unsafe methods
+
+Setup
+-----
+
+Hardware:
+    * QuadCore Intel Core i7-2600K, 4200 MHz (42 x 100) (Hyperthreading Enabled)
+    * Asus Maximus IV Extreme-Z  Mobo
+    * Intel Cougar Point Z68, Intel Sandy Bridge
+    * 16281 MB RAM  (DDR3 1998 MHz)
+
+Software:
+    * Microsoft Windows 7 Ultimate 6.1.7601.17944 (Win7 RTM)
+    * Oracle JDK 1.6.0_37 (64-bit)
+
+Test
+----
+
+Implemented here: https://github.com/al3ks/cachestatsmicrobench/blob/master/src/main/java/CacheStatsMicroBench.java
+
+Other than the Control, the tests are run twice just to shake off any temporal artifacts. You can assume the "real" number is between the two values.
+
+Conclusion
+----------
+
+To my surprise my LocalStripedLong implemetation was actually the winner by a reasonable margin. Closely followed by the Striped64 implementation. The atomic implementation performed worse than expected, and you can see contention kills it's
+performance as the threads are increased.
+
+I have released the LocalStripedLong implementation under the Apache License. Feel free to use it wherever. Would also be happy to find it a home in a library somewhere.
+
+Results
+-------
+
+
+Threads=1
+  Control            Duration=1.0300s
+
+  Striped64          Duration=0.5360s
+  Atomic             Duration=0.5430s
+  LocalStripedLong   Duration=0.3540s
+
+  Striped64          Duration=0.5700s
+  Atomic             Duration=0.5460s
+  LocalStripedLong   Duration=0.4580s
+
+Threads=2
+  Control            Duration=4.2770s
+
+  Striped64          Duration=1.0590s
+  Atomic             Duration=2.3530s
+  LocalStripedLong   Duration=0.5050s
+
+  Striped64          Duration=0.8890s
+  Atomic             Duration=2.6070s
+  LocalStripedLong   Duration=0.4750s
+
+Threads=4
+  Control            Duration=9.3190s
+
+  Striped64          Duration=1.2160s
+  Atomic             Duration=4.7460s
+  LocalStripedLong   Duration=0.6380s
+
+  Striped64          Duration=1.0620s
+  Atomic             Duration=5.9650s
+  LocalStripedLong   Duration=0.6860s
+
+Threads=8
+  Control            Duration=18.6170s
+
+  Striped64          Duration=1.6710s
+  Atomic             Duration=14.3180s
+  LocalStripedLong   Duration=0.9750s
+
+  Striped64          Duration=1.5600s
+  Atomic             Duration=13.0770s
+  LocalStripedLong   Duration=1.4170s
+
+Threads=16
+  Control            Duration=37.4160s
+
+  Striped64          Duration=3.4380s
+  Atomic             Duration=25.9820s
+  LocalStripedLong   Duration=2.5620s
+
+  Striped64          Duration=3.2070s
+  Atomic             Duration=26.4030s
+  LocalStripedLong   Duration=2.5460s
