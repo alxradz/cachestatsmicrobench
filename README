@@ -44,7 +44,7 @@ performance as the threads are increased.
 
 I have released the StripedLocalLong implementation and variants under the Apache License. Feel free to use it wherever. Would also be happy to find it a home in a library somewhere.
 
-StripedLocalLong has very good performance up to 4 threads (there are 4 cores on my test machine), then performance starts to degrate with 8+ threads, however it's still performs the best of the bunch.
+StripedLocalLong has very good performance up to 4 threads (there are 4 cores on my test machine), then performance starts to degrate with 8+ threads. The other striped implementations seems to come into their own as the thread count increases.
 
 Results
 -------
