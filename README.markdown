@@ -18,14 +18,14 @@ Setup
 -----
 
 Hardware:
-    QuadCore Intel Core i7-2600K, 4200 MHz (42 x 100) (Hyperthreading Enabled)
-    Asus Maximus IV Extreme-Z  (1 PCI-E x1, 1 PCI-E x4, 4 PCI-E x16, 4 DDR3 DIMM, Audio, Dual Gigabit LAN)
-    Intel Cougar Point Z68, Intel Sandy Bridge
-    16281 MB RAM  (DDR3 1998 MHz)
+    * QuadCore Intel Core i7-2600K, 4200 MHz (42 x 100) (Hyperthreading Enabled)
+    * Asus Maximus IV Extreme-Z  (1 PCI-E x1, 1 PCI-E x4, 4 PCI-E x16, 4 DDR3 DIMM, Audio, Dual Gigabit LAN)
+    * Intel Cougar Point Z68, Intel Sandy Bridge
+    * 16281 MB RAM  (DDR3 1998 MHz)
 
 Software:
-    Microsoft Windows 7 Ultimate 6.1.7601.17944 (Win7 RTM)
-    Oracle JDK 1.6.0_37 (64-bit)
+    * Microsoft Windows 7 Ultimate 6.1.7601.17944 (Win7 RTM)
+    * Oracle JDK 1.6.0_37 (64-bit)
 
 Test
 ----
@@ -45,7 +45,8 @@ I have released the LocalStripedLong implementation under the Apache License. Fe
 Results
 -------
 
-Threads=1
+
+>"Threads=1
   Control            Duration=1.0300s
 
   Striped64          Duration=0.5360s
@@ -99,3 +100,4 @@ Threads=16
   Striped64          Duration=3.2070s
   Atomic             Duration=26.4030s
   LocalStripedLong   Duration=2.5460s
+ "
